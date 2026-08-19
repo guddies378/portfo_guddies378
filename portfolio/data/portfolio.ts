@@ -25,17 +25,6 @@ export const portfolio = {
 
   experience: [
     {
-      title: "AI Development / Machine Learning",
-      company: "Capstone Project",
-      year: "2024–2025",
-      items: [
-        "Built machine learning models using Python, TensorFlow, PyTorch, and scikit-learn.",
-        "Managed training datasets using MongoDB.",
-        "Developed NLP applications and chatbot prototypes.",
-      ],
-    },
-
-    {
       title: "Management Information System (MIS)",
       company: "University of Eastern Philippines",
       year: "OJT",
@@ -43,17 +32,6 @@ export const portfolio = {
         "Assisted with system-related tasks.",
         "Troubleshooting and IT support.",
         "Supported operational and technical requirements.",
-      ],
-    },
-
-    {
-      title: "Frontend Development",
-      company: "LGU Mondragon Website",
-      year: "School Project (2023)",
-      items: [
-        "Developed responsive web interfaces.",
-        "Built using HTML and CSS.",
-        "Improved user experience.",
       ],
     },
   ],

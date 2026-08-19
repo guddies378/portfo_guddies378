@@ -6,9 +6,9 @@ import Image from "next/image";
 const links = [
   { label: "ABOUT", href: "#about" },
   { label: "EXPERIENCE", href: "#experience" },
+  { label: "PROJECTS", href: "#projects" },
   { label: "SKILLS", href: "#skills" },
   { label: "EDUCATION", href: "#education" },
-  { label: "CONTACT", href: "#contact" },
 ];
 
 export default function Navbar() {
@@ -18,52 +18,109 @@ export default function Navbar() {
     setMenuOpen(false);
   };
 
+  const handleContactClick = () => {
+    setMenuOpen(false);
+
+    const character = document.getElementById("character");
+
+    if (!character) return;
+
+    character.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
+
+    window.setTimeout(() => {
+      window.dispatchEvent(new Event("open-contact"));
+    }, 700);
+  };
+
   return (
     <header className="fixed left-0 top-0 z-50 w-full border-b border-slate-800 bg-slate-900/95 backdrop-blur-md">
-      <nav className="mx-auto flex h-20 w-full max-w-350 items-center justify-between px-4 sm:px-6 md:px-8 lg:px-10">
-        {/* Large koala on the left */}
+      <nav className="mx-auto flex h-20 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        {/* KOALA */}
         <a
           href="#hero"
           onClick={closeMenu}
           className="flex h-full shrink-0 items-center"
-          aria-label="Go to the hero section"
+          aria-label="Go to hero section"
         >
           <Image
             src="/Koala.png"
             alt="Pixel koala logo"
-            width={180}
-            height={100}
+            width={220}
+            height={120}
             priority
             className="
               koala-logo
               h-auto
-              w-30
+              w-32.5
               object-contain
               object-left
-              sm:w-36.25
-              lg:w-43.75
+              sm:w-37.5
+              lg:w-45
             "
           />
         </a>
 
-        {/* Desktop links on the right */}
-        <div className="ml-auto hidden items-center justify-end gap-6 md:flex lg:gap-9">
+        {/* DESKTOP MENU */}
+        <div className="ml-auto hidden items-center gap-8 font-title md:flex lg:gap-10">
           {links.map((link) => (
             <a
               key={link.label}
               href={link.href}
-              className="font-title text-xs uppercase tracking-[0.18em] text-slate-300 transition-colors duration-200 hover:text-cyan-400 lg:text-sm"
+              className="
+                text-sm
+                uppercase
+                tracking-[0.18em]
+                text-slate-300
+                transition-colors
+                duration-200
+                hover:text-cyan-400
+              "
             >
               {link.label}
             </a>
           ))}
+
+          <button
+            type="button"
+            onClick={handleContactClick}
+            className="
+              font-title
+              text-sm
+              uppercase
+              tracking-[0.18em]
+              text-slate-300
+              transition-colors
+              duration-200
+              hover:text-cyan-400
+            "
+          >
+            CONTACT
+          </button>
         </div>
 
-        {/* Mobile button */}
+        {/* MOBILE BUTTON */}
         <button
           type="button"
-          onClick={() => setMenuOpen((previous) => !previous)}
-          className="ml-auto flex h-10 w-10 items-center justify-center border-2 border-cyan-400 font-title text-lg text-cyan-400 md:hidden"
+          onClick={() =>
+            setMenuOpen((previous) => !previous)
+          }
+          className="
+            ml-auto
+            flex
+            h-10
+            w-10
+            items-center
+            justify-center
+            border-2
+            border-cyan-400
+            font-title
+            text-lg
+            text-cyan-400
+            md:hidden
+          "
           aria-label="Toggle navigation menu"
           aria-expanded={menuOpen}
         >
@@ -71,20 +128,44 @@ export default function Navbar() {
         </button>
       </nav>
 
-      {/* Mobile menu */}
+      {/* MOBILE MENU */}
       {menuOpen && (
         <div className="border-t border-slate-800 bg-slate-950/95 px-4 py-5 md:hidden">
-          <div className="mx-auto flex max-w-350 flex-col items-center gap-5">
+          <div className="mx-auto flex max-w-7xl flex-col items-center gap-5">
             {links.map((link) => (
               <a
                 key={link.label}
                 href={link.href}
                 onClick={closeMenu}
-                className="font-title text-sm uppercase tracking-[0.18em] text-slate-300 hover:text-cyan-400"
+                className="
+                  font-title
+                  text-sm
+                  uppercase
+                  tracking-[0.18em]
+                  text-slate-300
+                  transition-colors
+                  hover:text-cyan-400
+                "
               >
                 {link.label}
               </a>
             ))}
+
+            <button
+              type="button"
+              onClick={handleContactClick}
+              className="
+                font-title
+                text-sm
+                uppercase
+                tracking-[0.18em]
+                text-slate-300
+                transition-colors
+                hover:text-cyan-400
+              "
+            >
+              CONTACT
+            </button>
           </div>
         </div>
       )}
