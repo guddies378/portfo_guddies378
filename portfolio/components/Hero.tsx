@@ -12,15 +12,24 @@ import { portfolio } from "@/data/portfolio";
 export default function Hero() {
   const [showContact, setShowContact] = useState(false);
 
+  const characterRef = useRef<HTMLDivElement>(null);
+
   const autoHideRef =
     useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const holdTimerRef =
-    useRef<ReturnType<typeof setTimeout> | null>(null);
+  /* =========================================
+     CHECK IF DEVICE IS MOBILE / TOUCH
+  ========================================= */
 
-  const longPressTriggeredRef = useRef(false);
+  const isTouchDevice = () => {
+    if (typeof window === "undefined") {
+      return false;
+    }
 
-  const suppressNextClickRef = useRef(false);
+    return window.matchMedia(
+      "(hover: none) and (pointer: coarse)"
+    ).matches;
+  };
 
   /* =========================================
      CLEAR AUTO HIDE
@@ -34,17 +43,6 @@ export default function Hero() {
   };
 
   /* =========================================
-     CLEAR HOLD TIMER
-  ========================================= */
-
-  const clearHoldTimer = () => {
-    if (holdTimerRef.current) {
-      clearTimeout(holdTimerRef.current);
-      holdTimerRef.current = null;
-    }
-  };
-
-  /* =========================================
      NAVBAR CONTACT EVENT
   ========================================= */
 
@@ -54,6 +52,10 @@ export default function Hero() {
 
       setShowContact(true);
 
+      /*
+        Automatically hide after 4 seconds
+        when opened from navbar.
+      */
       autoHideRef.current = setTimeout(() => {
         setShowContact(false);
       }, 4000);
@@ -71,18 +73,65 @@ export default function Hero() {
       );
 
       clearAutoHide();
-      clearHoldTimer();
     };
   }, []);
+
+  /* =========================================
+     CLOSE MOBILE BUBBLE WHEN USER
+     TAPS SOMEWHERE ELSE
+  ========================================= */
+
+  useEffect(() => {
+    const handleOutsideClick = (
+      event: PointerEvent
+    ) => {
+      if (!isTouchDevice()) {
+        return;
+      }
+
+      if (!showContact) {
+        return;
+      }
+
+      const character =
+        characterRef.current;
+
+      if (
+        character &&
+        !character.contains(
+          event.target as Node
+        )
+      ) {
+        clearAutoHide();
+
+        setShowContact(false);
+      }
+    };
+
+    document.addEventListener(
+      "pointerdown",
+      handleOutsideClick
+    );
+
+    return () => {
+      document.removeEventListener(
+        "pointerdown",
+        handleOutsideClick
+      );
+    };
+  }, [showContact]);
 
   /* =========================================
      DESKTOP HOVER
   ========================================= */
 
   const handleMouseEnter = () => {
-    if (
-      window.matchMedia("(hover: hover)").matches
-    ) {
+    /*
+      Only use hover behavior on devices
+      that actually have a mouse/trackpad.
+    */
+
+    if (!isTouchDevice()) {
       clearAutoHide();
 
       setShowContact(true);
@@ -90,80 +139,10 @@ export default function Hero() {
   };
 
   const handleMouseLeave = () => {
-    if (
-      window.matchMedia("(hover: hover)").matches
-    ) {
+    if (!isTouchDevice()) {
+      clearAutoHide();
+
       setShowContact(false);
-    }
-  };
-
-  /* =========================================
-     PHONE - START HOLD
-  ========================================= */
-
-  const handleTouchStart = () => {
-    clearAutoHide();
-    clearHoldTimer();
-
-    longPressTriggeredRef.current = false;
-    suppressNextClickRef.current = false;
-
-    /*
-      User must hold for 400ms
-      before the dialogue appears.
-    */
-    holdTimerRef.current = setTimeout(() => {
-      longPressTriggeredRef.current = true;
-      suppressNextClickRef.current = true;
-
-      setShowContact(true);
-    }, 400);
-  };
-
-  /* =========================================
-     PHONE - RELEASE
-  ========================================= */
-
-  const handleTouchEnd = () => {
-    clearHoldTimer();
-
-    /*
-      If the user was holding long enough
-      to show the dialogue, hide it as soon
-      as their finger is released.
-    */
-    if (longPressTriggeredRef.current) {
-      setShowContact(false);
-
-      longPressTriggeredRef.current = false;
-    }
-  };
-
-  /* =========================================
-     PHONE - TOUCH CANCEL
-  ========================================= */
-
-  const handleTouchCancel = () => {
-    clearHoldTimer();
-
-    setShowContact(false);
-
-    longPressTriggeredRef.current = false;
-    suppressNextClickRef.current = false;
-  };
-
-  /* =========================================
-     PHONE - USER STARTS SCROLLING
-  ========================================= */
-
-  const handleTouchMove = () => {
-    /*
-      Cancel the long press if the user
-      starts moving their finger to scroll.
-    */
-
-    if (!longPressTriggeredRef.current) {
-      clearHoldTimer();
     }
   };
 
@@ -175,28 +154,50 @@ export default function Hero() {
     event: MouseEvent<HTMLAnchorElement>
   ) => {
     /*
-      Browsers usually fire a click after
-      touchend.
+      DESKTOP
 
-      If the touch was a long press,
-      prevent that click so email does not
-      open when the visitor releases.
+      Let the <a href="mailto:...">
+      behave normally.
+
+      Clicking the character immediately
+      opens the visitor's email app.
     */
 
-    if (suppressNextClickRef.current) {
+    if (!isTouchDevice()) {
+      return;
+    }
+
+    /*
+      MOBILE - FIRST TAP
+
+      If the bubble is hidden:
+      1. Stop mailto
+      2. Show CONTACT ME
+    */
+
+    if (!showContact) {
       event.preventDefault();
 
-      suppressNextClickRef.current = false;
+      clearAutoHide();
+
+      setShowContact(true);
 
       return;
     }
 
     /*
-      Quick tap:
-      nothing is prevented.
+      MOBILE - SECOND TAP
 
-      The mailto link opens normally.
+      showContact is already true.
+
+      We DO NOT call preventDefault().
+
+      Therefore the normal mailto link
+      continues and opens the visitor's
+      email application.
     */
+
+    clearAutoHide();
   };
 
   return (
@@ -294,19 +295,14 @@ export default function Hero() {
             "
           >
             <div
+              ref={characterRef}
               className="character-wrapper"
-
-              /* Desktop */
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
-
-              /* Phone */
-              onTouchStart={handleTouchStart}
-              onTouchEnd={handleTouchEnd}
-              onTouchCancel={handleTouchCancel}
-              onTouchMove={handleTouchMove}
             >
-              {/* Glow */}
+              {/* =================================
+                  CHARACTER GLOW
+              ================================= */}
 
               <div
                 className="character-glow"
@@ -314,7 +310,7 @@ export default function Hero() {
               />
 
               {/* =================================
-                  GAME DIALOGUE
+                  CONTACT GAME BUBBLE
               ================================= */}
 
               <div
@@ -334,7 +330,9 @@ export default function Hero() {
                     ■
                   </span>
 
-                  <span>CONTACT ME</span>
+                  <span>
+                    CONTACT ME
+                  </span>
                 </div>
 
                 <p className="game-dialogue-message">
@@ -356,12 +354,21 @@ export default function Hero() {
                 aria-label="Contact me by email"
                 onClick={handleCharacterClick}
                 onFocus={() => {
-                  clearAutoHide();
+                  /*
+                    Keyboard users on desktop
+                    can still see the bubble.
+                  */
 
-                  setShowContact(true);
+                  if (!isTouchDevice()) {
+                    clearAutoHide();
+
+                    setShowContact(true);
+                  }
                 }}
                 onBlur={() => {
-                  setShowContact(false);
+                  if (!isTouchDevice()) {
+                    setShowContact(false);
+                  }
                 }}
               >
                 <Image
