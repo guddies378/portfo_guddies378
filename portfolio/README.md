@@ -1,36 +1,97 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+MY PORTFOLIO
+============
 
-## Getting Started
+A personal portfolio website showcasing my skills, projects, experience,
+and contact information.
 
-First, run the development server:
+Built with Next.js and TypeScript.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+TECHNOLOGIES
+============
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Next.js
+- React
+- TypeScript
+- CSS
+- JavaScript
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
+FEATURES
+========
 
-To learn more about Next.js, take a look at the following resources:
+- Personal introduction
+- About section
+- Skills section
+- Experience / Projects
+- Education
+- Contact section
+- Responsive design
+- Interactive UI
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+PROJECT STRUCTURE
+=================
 
-## Deploy on Vercel
+app/
+    Main application pages and layouts
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+components/
+    Reusable website components
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+data/
+    Portfolio information and data
+
+public/
+    Images, icons, and other public assets
+
+
+GETTING STARTED
+===============
+
+1. Clone the repository:
+
+   git clone https://github.com/guddies378/portfo_guddies378.git
+
+2. Go to the portfolio folder:
+
+   cd portfo_guddies378/portfolio
+
+3. Install dependencies:
+
+   npm install
+
+4. Start the development server:
+
+   npm run dev
+
+5. Open your browser and visit:
+
+   http://localhost:3000
+
+
+BUILD FOR PRODUCTION
+====================
+
+To create a production build:
+
+   npm run build
+
+To start the production server:
+
+   npm start
+
+
+AUTHOR
+======
+
+Mark James F. Manlangit
+
+GitHub:
+https://github.com/guddies378
+
+
+LICENSE
+=======
+
+This project is for personal portfolio purposes.
