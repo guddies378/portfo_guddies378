@@ -91,7 +91,8 @@ GitHub:
 https://github.com/guddies378
 
 
-LICENSE
+## 📄 License
 =======
 
 This project is for personal portfolio purposes.
+© 2026 Mark James F. Manlangit. All Rights Reserved.
